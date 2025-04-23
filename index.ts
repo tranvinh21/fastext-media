@@ -7,8 +7,9 @@ const sz_zone = process.env.STORAGE_ZONE!;
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
 const access_key = process.env.STORAGE_ACCESS_KEY!;
 const uploadPathname = "/upload";
+const baseUrl = "https://media.fastext.vicidev.io.vn";
 const expires = "1hr";
-const maxSize = "30MB";
+const maxSize = "10MB";
 const sz = BunnyStorageSDK.zone.connect_with_accesskey(
 	BunnyStorageSDK.regions.StorageRegion.Singapore,
 	sz_zone,
@@ -18,7 +19,7 @@ const sz = BunnyStorageSDK.zone.connect_with_accesskey(
 console.log("Starting server...");
 
 BunnySDK.net.http.serve(
-	{ port: 3002, hostname: "127.0.0.1" },
+	{ port: 3002, hostname: "0.0.0.0" },
 	async (request) => {
 		try {
 			const requestUrl = request.url;
@@ -33,7 +34,8 @@ BunnySDK.net.http.serve(
 				console.log("parameters", parameters);
 				// return signed url response
 				return await signUrl({
-					baseUrl: `https://media.fastext.vicidev.io.vn/upload`,
+					// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
+					baseUrl: baseUrl + uploadPathname,
 					checksum: false,
 					expires,
 					filePath: parameters.filePath,

@@ -1,0 +1,71 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "media-ts",
+      "dependencies": {
+        "@bunny.net/edgescript-sdk": "^0.12.0",
+        "@bunny.net/storage-sdk": "^0.3.0",
+        "bunny-presigned-urls": "^0.0.5",
+        "bunny-sdk": "^0.0.31",
+      },
+      "devDependencies": {
+        "@types/bun": "latest",
+      },
+      "peerDependencies": {
+        "typescript": "^5",
+      },
+    },
+  },
+  "packages": {
+    "@bunny.net/edgescript-sdk": ["@bunny.net/edgescript-sdk@0.12.0", "", { "dependencies": { "@hono/node-server": "^1.12.0", "hono": "^4.5.5" } }, "sha512-SLXBnPjxj1zNchNaGT2n8j5JWHzzfEYvpv4k3o1Cg1u4tAsnqzdmV7jTajLgFPdaJBdgrzuWzYXgDNqR51Ad2Q=="],
+
+    "@bunny.net/storage-sdk": ["@bunny.net/storage-sdk@0.3.0", "", { "dependencies": { "dotenv": "^16.4.7", "zod": "^3.24.2" } }, "sha512-fRtYdztE01tVdQFX25GlYYnjCeTrW44ZsVlUNOcczKzPg6ellZ/awCzg+WsqY7bwIlUD7dTgy/Jtj8qOTmAs+Q=="],
+
+    "@hono/node-server": ["@hono/node-server@1.14.1", "", { "peerDependencies": { "hono": "^4" } }, "sha512-vmbuM+HPinjWzPe7FFPWMMQMsbKE9gDPhaH0FFdqbGpkT5lp++tcWDTxwBl5EgS5y6JVgIaCdjeHRfQ4XRBRjQ=="],
+
+    "@microsoft/kiota-abstractions": ["@microsoft/kiota-abstractions@1.0.0-preview.72", "", { "dependencies": { "@opentelemetry/api": "^1.7.0", "@std-uritemplate/std-uritemplate": "^1.0.1", "guid-typescript": "^1.0.9", "tinyduration": "^3.3.0", "tslib": "^2.6.2", "uuid": "^11.0.2" } }, "sha512-MfW2QMXIP/Xz2HVUJmkoDf4tCD7FYNFMl81fZJoARGPYOEj/VV+Fm7GQt/C7Fm3wVZ15iqkhrnZiRK0Lr41+6A=="],
+
+    "@microsoft/kiota-http-fetchlibrary": ["@microsoft/kiota-http-fetchlibrary@1.0.0-preview.72", "", { "dependencies": { "@microsoft/kiota-abstractions": "^1.0.0-preview.72", "@opentelemetry/api": "^1.7.0", "guid-typescript": "^1.0.9", "tslib": "^2.6.2" } }, "sha512-al4CEZRnADy5Qn6UqUnKVrXyvblqnY+SMTHt+g/3RAfyDyNZb6aqkr/O7H+d3OpGueCbrPv5X+P+mHoVKmUGSg=="],
+
+    "@microsoft/kiota-serialization-form": ["@microsoft/kiota-serialization-form@1.0.0-preview.72", "", { "dependencies": { "@microsoft/kiota-abstractions": "^1.0.0-preview.72", "guid-typescript": "^1.0.9", "tslib": "^2.6.2" } }, "sha512-7iZRzJ7ApqyLrlrIAs7OkEPcKfo+VfH7kPqlkcsKu21XxvUMFs9KZox137XANgXfKo1UNnimra/aKwJfvT0+CQ=="],
+
+    "@microsoft/kiota-serialization-json": ["@microsoft/kiota-serialization-json@1.0.0-preview.72", "", { "dependencies": { "@microsoft/kiota-abstractions": "^1.0.0-preview.72", "guid-typescript": "^1.0.9", "tslib": "^2.6.2" } }, "sha512-SGniy+VIEgrpy9P5UJ9Ln6ScLNXsJeJQt5fdM/1eD97be9BWnaI48x0UnrnB7RsFXxJbVdYz0tybSqWX3sGgRw=="],
+
+    "@microsoft/kiota-serialization-multipart": ["@microsoft/kiota-serialization-multipart@1.0.0-preview.72", "", { "dependencies": { "@microsoft/kiota-abstractions": "^1.0.0-preview.72", "guid-typescript": "^1.0.9", "tslib": "^2.6.2" } }, "sha512-/k+h2oq7i4ba8J+tJ1dv9o33jxnaFe+42tlYlcsjHgVz/Exy0uiENXu/0Uehul88LJI8aQ+61HcddYAlWjULLg=="],
+
+    "@microsoft/kiota-serialization-text": ["@microsoft/kiota-serialization-text@1.0.0-preview.72", "", { "dependencies": { "@microsoft/kiota-abstractions": "^1.0.0-preview.72", "guid-typescript": "^1.0.9", "tslib": "^2.6.2" } }, "sha512-6nLRmS/tHhjUxktRgOIJCXdT2+IU0m8HLq5SmYif79PGZEkdMknkH5M8KvcI5mhk8dS/s7j14AN7P0gZw1CLQQ=="],
+
+    "@opentelemetry/api": ["@opentelemetry/api@1.9.0", "", {}, "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="],
+
+    "@std-uritemplate/std-uritemplate": ["@std-uritemplate/std-uritemplate@1.0.6", "", {}, "sha512-+S9kAqK60nZZyvhvesoXut6NB9qB80VTpNsdiOeHmE0FAMOEsJy9/dakDL3xMp3kNRFvviw0mX9WPSuasvSxCQ=="],
+
+    "@types/bun": ["@types/bun@1.2.10", "", { "dependencies": { "bun-types": "1.2.10" } }, "sha512-eilv6WFM3M0c9ztJt7/g80BDusK98z/FrFwseZgT4bXCq2vPhXD4z8R3oddmAn+R/Nmz9vBn4kweJKmGTZj+lg=="],
+
+    "@types/node": ["@types/node@22.14.1", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-u0HuPQwe/dHrItgHHpmw3N2fYCR6x4ivMNbPHRkBVP4CvN+kiRrKHWk3i8tXiO/joPwXLMYvF9TTF0eqgHIuOw=="],
+
+    "bun-types": ["bun-types@1.2.10", "", { "dependencies": { "@types/node": "*" } }, "sha512-b5ITZMnVdf3m1gMvJHG+gIfeJHiQPJak0f7925Hxu6ZN5VKA8AGy4GZ4lM+Xkn6jtWxg5S3ldWvfmXdvnkp3GQ=="],
+
+    "bunny-presigned-urls": ["bunny-presigned-urls@0.0.5", "", { "bin": { "bunny-presigned-urls": "key.js" } }, "sha512-19nTebfzLFqrMRt8uyTF/PO8ZyQCyouDMy4J5pbEmh40n8UzezT+JUan3krmOxVcaYVTUFRhWhik3HsTFaCZTQ=="],
+
+    "bunny-sdk": ["bunny-sdk@0.0.31", "", { "dependencies": { "@microsoft/kiota-abstractions": "1.0.0-preview.72", "@microsoft/kiota-http-fetchlibrary": "1.0.0-preview.72", "@microsoft/kiota-serialization-form": "1.0.0-preview.72", "@microsoft/kiota-serialization-json": "1.0.0-preview.72", "@microsoft/kiota-serialization-multipart": "1.0.0-preview.72", "@microsoft/kiota-serialization-text": "1.0.0-preview.72" } }, "sha512-DK3r9FPa9K9Ky+74jjiV3CXAwucpYF2UXKGsHgB+vOPiCVY+7CpNpqf1Or9bv5mA7s4d5m6B8Xck3ywRbblhYQ=="],
+
+    "dotenv": ["dotenv@16.5.0", "", {}, "sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg=="],
+
+    "guid-typescript": ["guid-typescript@1.0.9", "", {}, "sha512-Y8T4vYhEfwJOTbouREvG+3XDsjr8E3kIr7uf+JZ0BYloFsttiHU0WfvANVsR7TxNUJa/WpCnw/Ino/p+DeBhBQ=="],
+
+    "hono": ["hono@4.7.7", "", {}, "sha512-2PCpQRbN87Crty8/L/7akZN3UyZIAopSoRxCwRbJgUuV1+MHNFHzYFxZTg4v/03cXUm+jce/qa2VSBZpKBm3Qw=="],
+
+    "tinyduration": ["tinyduration@3.4.1", "", {}, "sha512-NemFoamVYn7TmtwZKZ3OiliM9fZkr6EWiTM+wKknco6POSy2gS689xx/pXip0JYp40HXpUw6k65CUYHWYUXdaA=="],
+
+    "tslib": ["tslib@2.8.1", "", {}, "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="],
+
+    "typescript": ["typescript@5.8.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="],
+
+    "undici-types": ["undici-types@6.21.0", "", {}, "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ=="],
+
+    "uuid": ["uuid@11.1.0", "", { "bin": { "uuid": "dist/esm/bin/uuid" } }, "sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A=="],
+
+    "zod": ["zod@3.24.3", "", {}, "sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg=="],
+  }
+}

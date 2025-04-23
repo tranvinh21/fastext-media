@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload with Streaming</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .upload-section {
+            margin-bottom: 30px;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .file-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .file-info {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .file-info p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #3498db;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .progress-text {
+            margin-top: 5px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #2980b9;
+        }
+        
+        .button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background-color: #d5f5e3;
+            border: 1px solid #2ecc71;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #e74c3c;
+        }
+        
+        .log-container {
+            margin-top: 30px;
+            background-color: #2c3e50;
+            border-radius: 5px;
+            padding: 15px;
+            color: #ecf0f1;
+            font-family: monospace;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            word-break: break-all;
+        }
+        
+        .settings {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File Upload with Streaming</h1>
+        
+        <div class="settings">
+            <div class="form-group">
+                <label for="baseUrl">API Base URL:</label>
+                <input type="text" id="baseUrl" value="https://media.fastext.vicidev.io.vn">
+            </div>
+        </div>
+        
+        <div class="upload-section">
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" class="file-input">
+                <button id="uploadButton" class="button" disabled>Upload</button>
+            </div>
+            
+            <div id="fileInfo" class="file-info hidden">
+                <p><strong>File name:</strong> <span id="fileName"></span></p>
+                <p><strong>File size:</strong> <span id="fileSize"></span></p>
+                <p><strong>File type:</strong> <span id="fileType"></span></p>
+            </div>
+            
+            <div id="progressContainer" class="progress-container hidden">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div id="progressText" class="progress-text">0%</div>
+            </div>
+            
+            <div id="resultContainer" class="result hidden"></div>
+        </div>
+        
+        <div id="logContainer" class="log-container">
+            <div class="log-entry">System ready. Select a file to begin.</div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const fileInput = document.getElementById('fileInput');
+        const uploadButton = document.getElementById('uploadButton');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileNameElement = document.getElementById('fileName');
+        const fileSizeElement = document.getElementById('fileSize');
+        const fileTypeElement = document.getElementById('fileType');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const resultContainer = document.getElementById('resultContainer');
+        const logContainer = document.getElementById('logContainer');
+        const baseUrlInput = document.getElementById('baseUrl');
+        
+        // Add log entry
+        function addLog(message, isError = false) {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            if (isError) {
+                logEntry.style.color = '#e74c3c';
+            }
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        // Format bytes to human-readable format
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+        
+        // File input change handler
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            
+            if (file) {
+                // Display file info
+                fileNameElement.textContent = file.name;
+                fileSizeElement.textContent = formatBytes(file.size);
+                fileTypeElement.textContent = file.type || 'unknown';
+                fileInfo.classList.remove('hidden');
+                
+                // Enable upload button
+                uploadButton.disabled = false;
+                
+                addLog(`File selected: ${file.name} (${formatBytes(file.size)})`);
+            } else {
+                fileInfo.classList.add('hidden');
+                uploadButton.disabled = true;
+            }
+        });
+        
+        // Upload button click handler
+        uploadButton.addEventListener('click', async function() {
+            const file = fileInput.files[0];
+            if (!file) return;
+            
+            try {
+                // Reset UI
+                resultContainer.classList.add('hidden');
+                progressContainer.classList.remove('hidden');
+                progressFill.style.width = '0%';
+                progressText.textContent = '0%';
+                uploadButton.disabled = true;
+                
+                // Get base URL from input
+                const baseUrl = baseUrlInput.value.trim();
+                if (!baseUrl) {
+                    throw new Error('API Base URL is required');
+                }
+                
+                addLog(`Starting upload process for ${file.name}`);
+                
+                // Step 1: Get signed URL
+                addLog('Requesting signed URL...');
+                
+                const signUrlResponse = await fetch(`${baseUrl}/sign`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        filePath: `./${file.name}`,
+                        fileSizeInBytes: file.size,
+                    }),
+                });
+                
+                if (!signUrlResponse.ok) {
+                    throw new Error(`Failed to get signed URL: ${signUrlResponse.status} ${signUrlResponse.statusText}`);
+                }
+                
+                const signedUrl = await signUrlResponse.text();
+                addLog('Received signed URL');
+                
+                // Step 2: Upload file with progress tracking
+                addLog('Starting file upload...');
+                
+                // Create a ReadableStream from the file
+                const fileStream = file.stream();
+                
+                // Track upload progress
+                let uploadedBytes = 0;
+                const totalBytes = file.size;
+                
+                // Create a TransformStream to track progress
+                const progressStream = new TransformStream({
+                    transform(chunk, controller) {
+                        uploadedBytes += chunk.length;
+                        const percentComplete = Math.round((uploadedBytes / totalBytes) * 100);
+                        
+                        // Update progress UI
+                        progressFill.style.width = `${percentComplete}%`;
+                        progressText.textContent = `${percentComplete}%`;
+                        
+                        // Pass the chunk through
+                        controller.enqueue(chunk);
+                    }
+                });
+                
+                // Pipe through the progress stream
+                const readableStream = fileStream.pipeThrough(progressStream);
+                
+                // Upload the file
+                const uploadResponse = await fetch(signedUrl, {
+                    method: 'POST',
+                    body: readableStream,
+                    duplex: 'half',
+                });
+                
+                // Handle response
+                if (uploadResponse.status === 201) {
+                    addLog('Upload completed successfully');
+                    
+                    resultContainer.className = 'result success';
+                    resultContainer.textContent = 'File uploaded successfully!';
+                    resultContainer.classList.remove('hidden');
+                } else {
+                    const errorText = await uploadResponse.text();
+                    throw new Error(`Upload failed: ${uploadResponse.status} ${uploadResponse.statusText}\n${errorText}`);
+                }
+                
+            } catch (error) {
+                addLog(`Error: ${error.message}`, true);
+                
+                resultContainer.className = 'result error';
+                resultContainer.textContent = `Upload failed: ${error.message}`;
+                resultContainer.classList.remove('hidden');
+            } finally {
+                uploadButton.disabled = false;
+            }
+        });
+        
+        // Initialize
+        addLog('Application initialized');
+    </script>
+</body>
+</html>

@@ -33,7 +33,7 @@ BunnySDK.net.http.serve(
 				console.log("parameters", parameters);
 				// return signed url response
 				return await signUrl({
-					baseUrl: `${url.origin}${uploadPathname}`,
+					baseUrl: `https://media.fastext.vicidev.io.vn/upload`,
 					checksum: false,
 					expires,
 					filePath: parameters.filePath,

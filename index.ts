@@ -37,22 +37,20 @@ BunnySDK.net.http.serve(
 					storageZone: sz,
 					url: request.url,
 				});
-				// biome-ignore lint/style/noUselessElse: <explanation>
-			} else {
-				const parameters = (await request.json()) as BodyPayload;
-				const data = await signUrl({
-					// biome-ignore lint/style/useTemplate: <explanation>
-					baseUrl: url.origin + "/" + uploadPathname,
-					checksum: false,
-					expires,
-					filePath: parameters.filePath,
-					fileSizeInBytes: parameters.fileSizeInBytes,
-					key: access_key,
-					maxSize,
-					storageZone: sz,
-				});
-				return data;
 			}
+			const parameters = (await request.json()) as BodyPayload;
+			const data = await signUrl({
+				// biome-ignore lint/style/useTemplate: <explanation>
+				baseUrl: url.origin + "/" + uploadPathname,
+				checksum: false,
+				expires,
+				filePath: parameters.filePath,
+				fileSizeInBytes: parameters.fileSizeInBytes,
+				key: access_key,
+				maxSize,
+				storageZone: sz,
+			});
+			return data;
 		} catch (error) {
 			console.log(error);
 			// hide 500 errors for security

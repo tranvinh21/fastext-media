@@ -2,10 +2,6 @@ import * as BunnySDK from "@bunny.net/edgescript-sdk";
 import * as BunnyStorageSDK from "@bunny.net/storage-sdk";
 import { signUrl, uploadFile } from "bunny-presigned-urls";
 
-interface BodyPayload {
-	filePath: string;
-	fileSizeInBytes: number;
-}
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
 const sz_zone = process.env.STORAGE_ZONE!;
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
@@ -22,12 +18,32 @@ const sz = BunnyStorageSDK.zone.connect_with_accesskey(
 console.log("Starting server...");
 
 BunnySDK.net.http.serve(
-	{ port: 3002, hostname: "127.0.0.1" },
+	{ port: 3002, hostname: "0.0.0.0" },
 	async (request) => {
 		try {
-			const url = new URL(request.url);
-			console.log(request.method);
-			console.log(url.pathname);
+			const requestUrl = request.url;
+			const url = new URL(requestUrl);
+			if (request.method === "POST" && url.pathname === "/sign") {
+				// authorize user
+				const parameters = (await request.json()) as any;
+				if (!parameters.success) {
+					return new Response("Invalid parameters", {
+						status: 400,
+						statusText: "Bad Request",
+					});
+				}
+				// return signed url response
+				return await signUrl({
+					baseUrl: "https://media.fastext.vicidev.io.vn/upload",
+					checksum: parameters.data.checksum,
+					expires,
+					filePath: parameters.data.filePath,
+					fileSizeInBytes: parameters.data.fileSizeInBytes,
+					key: access_key,
+					maxSize,
+					storageZone: sz,
+				});
+			}
 			if (request.method === "POST" && url.pathname === uploadPathname) {
 				return await uploadFile({
 					body: request.body,
@@ -38,19 +54,6 @@ BunnySDK.net.http.serve(
 					url: request.url,
 				});
 			}
-			const parameters = (await request.json()) as BodyPayload;
-			const data = await signUrl({
-				// biome-ignore lint/style/useTemplate: <explanation>
-				baseUrl: url.origin + "/" + uploadPathname,
-				checksum: false,
-				expires,
-				filePath: parameters.filePath,
-				fileSizeInBytes: parameters.fileSizeInBytes,
-				key: access_key,
-				maxSize,
-				storageZone: sz,
-			});
-			return data;
 		} catch (error) {
 			console.log(error);
 			// hide 500 errors for security

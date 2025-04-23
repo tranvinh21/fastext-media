@@ -22,7 +22,7 @@ const sz = BunnyStorageSDK.zone.connect_with_accesskey(
 console.log("Starting server...");
 
 BunnySDK.net.http.serve(
-	{ port: 3002, hostname: "127.0.0.1" },
+	{ port: 3002, hostname: "0.0.0.0" },
 	async (request) => {
 		try {
 			const url = new URL(request.url);

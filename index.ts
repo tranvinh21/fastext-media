@@ -18,11 +18,13 @@ const sz = BunnyStorageSDK.zone.connect_with_accesskey(
 console.log("Starting server...");
 
 BunnySDK.net.http.serve(
-	{ port: 3002, hostname: "0.0.0.0" },
+	{ port: 3002, hostname: "127.0.0.1" },
 	async (request) => {
 		try {
 			const requestUrl = request.url;
+			console.log(requestUrl);
 			const url = new URL(requestUrl);
+			console.log(url);
 			console.log(request.method);
 			console.log(url.pathname);
 			if (request.method === "POST" && url.pathname === "/sign") {
@@ -31,7 +33,7 @@ BunnySDK.net.http.serve(
 				console.log("parameters", parameters);
 				// return signed url response
 				return await signUrl({
-					baseUrl: "http://127.0.0.1:3002/upload",
+					baseUrl: `${url.origin}${uploadPathname}`,
 					checksum: false,
 					expires,
 					filePath: parameters.filePath,

@@ -339,7 +339,7 @@
                 
                 // Pipe through the progress stream
                 const readableStream = fileStream.pipeThrough(progressStream);
-                
+                console.log("signedUrl",signedUrl)
                 // Upload the file
                 const uploadResponse = await fetch(signedUrl, {
                     method: 'POST',

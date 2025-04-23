@@ -11,11 +11,11 @@ const uploadPathname = "/upload";
 // const baseUrl = "http://127.0.0.1:3002";
 const expires = "1hr";
 const maxSize = "10MB";
-const sz = BunnyStorageSDK.zone.connect_with_accesskey(
-	BunnyStorageSDK.regions.StorageRegion.Singapore,
-	sz_zone,
-	access_key,
-);
+const sz = {
+	name: process.env.STORAGE_ZONE_NAME,
+	password: process.env.STORAGE_ZONE_PASSWORD,
+	storageHostname: process.env.STORAGE_ZONE_STORAGE_HOSTNAME,
+};
 
 console.log("Starting server...");
 

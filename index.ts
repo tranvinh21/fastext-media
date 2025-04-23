@@ -23,6 +23,11 @@ BunnySDK.net.http.serve(
 	{ port: 3002, hostname: "0.0.0.0" },
 	async (request) => {
 		try {
+			const headers = {
+				"Access-Control-Allow-Origin": "*", // or restrict to specific domain
+				"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type, Authorization",
+			  };
 			const requestUrl = request.url;
 			console.log(requestUrl);
 			const url = new URL(requestUrl);
@@ -45,6 +50,7 @@ BunnySDK.net.http.serve(
 						status: 200,
 						headers: {
 							"Content-Type": "text/html",
+							...headers
 						},
 					});
 				} catch (fileError) {
@@ -56,7 +62,7 @@ BunnySDK.net.http.serve(
 				// authorize user
 				const parameters = (await request.json()) as any;
 				// return signed url response
-				return await signUrl({
+				const data =  await signUrl({
 					// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
 					baseUrl: url.origin + uploadPathname,
 					checksum: false,
@@ -66,6 +72,12 @@ BunnySDK.net.http.serve(
 					key: access_key,
 					maxSize,
 					storageZone: sz,
+				});
+				return new Response(JSON.stringify(data), {
+					headers: {
+						"Content-Type": "application/json",
+						...headers
+					}
 				});
 			}
 			if (request.method === "POST" && url.pathname === uploadPathname) {
@@ -79,7 +91,12 @@ BunnySDK.net.http.serve(
 					url: requestUrl,
 				});
 				console.log("daa", data);
-				return data;
+				return new Response(JSON.stringify(data), {
+					headers: {
+						"Content-Type": "application/json",
+						...headers
+					}
+				});
 			}
 		} catch (error) {
 			console.log(error);

@@ -7,7 +7,8 @@ const sz_zone = process.env.STORAGE_ZONE!;
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
 const access_key = process.env.STORAGE_ACCESS_KEY!;
 const uploadPathname = "/upload";
-const baseUrl = "https://media.fastext.vicidev.io.vn";
+// const baseUrl = "https://media.fastext.vicidev.io.vn";
+// const baseUrl = "http://127.0.0.1:3002";
 const expires = "1hr";
 const maxSize = "10MB";
 const sz = BunnyStorageSDK.zone.connect_with_accesskey(
@@ -31,11 +32,10 @@ BunnySDK.net.http.serve(
 			if (request.method === "POST" && url.pathname === "/sign") {
 				// authorize user
 				const parameters = (await request.json()) as any;
-				console.log("parameters", parameters);
 				// return signed url response
 				return await signUrl({
 					// biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
-					baseUrl: baseUrl + uploadPathname,
+					baseUrl: url.origin + uploadPathname,
 					checksum: false,
 					expires,
 					filePath: parameters.filePath,
@@ -46,14 +46,14 @@ BunnySDK.net.http.serve(
 				});
 			}
 			if (request.method === "POST" && url.pathname === uploadPathname) {
-				console.log(request.body);
+				const requestUrl = request.url;
 				const data = await uploadFile({
 					body: request.body,
 					expires,
 					key: access_key,
 					maxSize,
 					storageZone: sz,
-					url: request.url,
+					url: requestUrl,
 				});
 				console.log("daa", data);
 				return data;

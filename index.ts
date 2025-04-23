@@ -23,29 +23,27 @@ BunnySDK.net.http.serve(
 		try {
 			const requestUrl = request.url;
 			const url = new URL(requestUrl);
+			console.log(request.method);
+			console.log(url.pathname);
 			if (request.method === "POST" && url.pathname === "/sign") {
 				// authorize user
 				const parameters = (await request.json()) as any;
-				if (!parameters.success) {
-					return new Response("Invalid parameters", {
-						status: 400,
-						statusText: "Bad Request",
-					});
-				}
+				console.log("parameters", parameters);
 				// return signed url response
 				return await signUrl({
-					baseUrl: "https://media.fastext.vicidev.io.vn/upload",
-					checksum: parameters.data.checksum,
+					baseUrl: "http://127.0.0.1:3002/upload",
+					checksum: false,
 					expires,
-					filePath: parameters.data.filePath,
-					fileSizeInBytes: parameters.data.fileSizeInBytes,
+					filePath: parameters.filePath,
+					fileSizeInBytes: parameters.fileSizeInBytes,
 					key: access_key,
 					maxSize,
 					storageZone: sz,
 				});
 			}
 			if (request.method === "POST" && url.pathname === uploadPathname) {
-				return await uploadFile({
+				console.log(request.body);
+				const data = await uploadFile({
 					body: request.body,
 					expires,
 					key: access_key,
@@ -53,6 +51,8 @@ BunnySDK.net.http.serve(
 					storageZone: sz,
 					url: request.url,
 				});
+				console.log("daa", data);
+				return data;
 			}
 		} catch (error) {
 			console.log(error);
